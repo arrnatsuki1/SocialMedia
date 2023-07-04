@@ -1,10 +1,10 @@
-const Connection = require('./Connection')
-const PublicacionesDAO = require('./PublicacionesDAO')
-const UsuariosDAO = require('./UsuariosDAO')
-const Usuario = require('./User')
-const UsuarioExistenteError = require('./excepciones/UsuarioExistenteError')
-const UsuarioInexistenteException = require('./excepciones/UsuarioInexistenteException')
-const Publicacion = require('./Publicacion')
+const Connection = require('../DAO/Connection')
+const PublicacionesDAO = require('../DAO/PublicacionesDAO')
+const UsuariosDAO = require('../DAO/UsuariosDAO')
+const Usuario = require('../Dominio/User')
+const UsuarioExistenteError = require('../Dominio/excepciones/UsuarioExistenteError')
+const UsuarioInexistenteException = require('../Dominio/excepciones/UsuarioInexistenteException')
+const Publicacion = require('../Dominio/Publicacion')
 
 class Logica {
 

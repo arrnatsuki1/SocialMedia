@@ -6,10 +6,10 @@ const cookie_parser = require('cookie-parser')
 /**
  * My stuff
  */
-const Connection = require('./Objetos/Connection')
-const Userdao = require('./Objetos/UsuariosDAO')
-const Usuario = require('./Objetos/User')
-const Logica = require('./Objetos/Logica');
+const Connection = require('./DAO/Connection')
+const Userdao = require('./DAO/UsuariosDAO')
+const Usuario = require('./Dominio/User')
+const Logica = require('./Logica_De_Negocio/Logica');
 
 /**
  * App configuration

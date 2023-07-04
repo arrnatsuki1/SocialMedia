@@ -1,4 +1,4 @@
-const Logica = require('../Objetos/Logica')
+const Logica = require('../Logica_De_Negocio/Logica')
 
 /**
  * Is somehow the model a Logic class?
