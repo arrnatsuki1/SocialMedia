@@ -1,0 +1,5 @@
+node_modules/
+coverage/
+test-pages/
+test/
+.env

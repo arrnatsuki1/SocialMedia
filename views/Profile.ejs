@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/public/normalize.css">
+    <link rel="stylesheet" href="/public/Profile.css">
+    <link rel="stylesheet" href="/public/header.css">
+    <link rel="stylesheet" href="/public/perfil.css">
+    <script src="/public/js/buscador.js"></script>
+    <% if(loged) { %>
+        <script src="/public/js/loged_pages/index.js" type="module"></script>
+    <% } else { %>
+        <script src="/public/js/index.js"></script>
+    <% } %>
+</head>
+
+<body>
+    <%- include('./viewcomponets/header') -%>
+        <!-- barra con la informacion del usuario -->
+    <%- include('./viewcomponets/profilebar', {profileinfo: userinfo}) -%>
+        <!-- Fin de la barra de usuario -->
+    <% publications.forEach((pub)=> { %>
+        <div class="publication">
+            <div class="pub-info">
+                <%= pub.date + " " + pub.creator.name%>
+            </div>
+            <div class="pub-body">
+                <p class="pub-body-text">
+                    <%= pub.message %>
+                </p>
+                <!-- OPTIONAL AN IMAGE -->
+            </div>
+        </div>
+    <% }) %>
+</body>
+
+</html>

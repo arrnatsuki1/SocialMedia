@@ -1,0 +1,42 @@
+body {
+    background-color: antiquewhite;
+}
+
+
+form {
+    display: grid;
+    background-color: green;
+    justify-content: center;
+    border-radius: 20px;
+    padding-bottom: 20px;
+}
+
+input {
+    display: block;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    width: 110%;
+    height: 40px;
+    border-radius: 10px;
+    font-size: 15px;
+    padding-left: 5px;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: center;
+    width: 110%;
+}
+
+.boton {
+    margin-left: 10px;
+    width: 10em;
+    height: 3em;
+    background-color: lightgreen;
+    border-radius: 50px;
+}
+
+.boton:hover {
+    cursor: pointer;
+    background-color: green;
+}

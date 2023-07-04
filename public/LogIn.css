@@ -1,0 +1,66 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+section {
+    display: grid;
+    justify-content: center;
+}
+
+label {
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.form {
+    display: grid;
+}
+
+.form-text {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    width: 40em;
+    height: 2em;
+    font-size: 16px;
+}
+
+.form-text:focus {
+    border-bottom: 2px solid blue;
+    outline: none;
+}
+
+.botones {
+    display: flex;
+    justify-content: center;
+}
+
+.boton:hover, .boton:focus {
+    background-color: blue;
+    outline: 2px;
+    border: 2;
+    color: white;
+}
+
+.back:hover, .back:focus {
+    background-color: brown;
+}
+
+.boton {
+    border: none;
+    cursor: pointer;
+    margin: 0px 10px 0px 10px;
+    padding: 10px 20px 10px 20px;
+    border-radius: 20px;
+    font-size: 1.2em;
+}
+
+.link {
+    display: flex;
+    justify-content: right;
+}

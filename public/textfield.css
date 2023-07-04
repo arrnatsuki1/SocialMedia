@@ -1,0 +1,13 @@
+.container {
+    display: grid;
+}
+
+.boton {
+    border-radius: 0px;
+}
+
+#main-textfield {
+    resize: none;
+    font-family: Arial, Helvetica, sans-serif;
+    padding-left: 10px;
+}

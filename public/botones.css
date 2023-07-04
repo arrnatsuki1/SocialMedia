@@ -1,0 +1,29 @@
+.botones {
+    display: flex;
+    justify-content: center;
+}
+
+.boton:hover, .boton:focus {
+    background-color: blue;
+    outline: 2px;
+    border: 2;
+    color: white;
+}
+
+.back:hover, .back:focus {
+    background-color: brown;
+}
+
+.boton {
+    border: none;
+    cursor: pointer;
+    margin: 0px 10px 0px 10px;
+    padding: 10px 20px 10px 20px;
+    border-radius: 20px;
+    font-size: 1.2em;
+}
+
+.link {
+    display: flex;
+    justify-content: right;
+}

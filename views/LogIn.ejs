@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/public/normalize.css">
+    <link rel="stylesheet" href="/public/LogIn.css">
+    <script src="/public/js/login.js"></script>
+    <script src="/public/js/encrypt.js" type="module"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- Header -->
+
+    <section>
+        <form action="" method="POST" class="form" id="form">
+            <label for="username">Nombre de usuario</label>
+            <input type="text" class="form-text" name="username" autocomplete="off" id="username">
+            <label for="password">Contraseña</label>
+            <input type="password" class="form-text" name="password" autocomplete="of" id="password">
+        </form>
+        <div class="botones">
+            <button class="boton back" id="boton-regresar">
+                Regresar
+            </button>
+            <button class="boton" id="avanzar">
+                Ingresar
+            </button>
+        </div>
+        <div class="link">
+            <a href="/sign-up" class="link-back" id="register">
+                Need an acount?
+            </a>
+        </div>
+    </section>
+</body>
+
+</html>
