@@ -12,7 +12,7 @@ function mensajeBienHecho() {
 }
 
 async function crearMensaje() {
-    const response = await fetch('/createmessage',
+    const response = await fetch('/message/createmessage',
         {
             method: "POST",
             headers: {

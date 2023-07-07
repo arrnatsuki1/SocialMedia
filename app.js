@@ -47,10 +47,12 @@ app.use('/views', express.static(path.join(__dirname, '/views')))
 
 const HomeController = require('./Controllers/HomeController')
 const SigupController = require('./Controllers/SignupController');
+const MessageController = require('./Controllers/MessageController')
 
 //Homepage
 app.use('/', HomeController)
 app.use('/sign-up', SigupController)
+app.use('/message', MessageController)
 
 //
 
@@ -192,20 +194,6 @@ app.post('/pubs/:uuid', (req, res) => {
         }).catch((err) => {
             res.status(400).end()
         })
-})
-
-app.post('/createmessage', (req, res) => {
-    const log = new Logica()
-    log.crearPublicacion(req.cookies.uuid, req.body.message).then(
-        (makeit) => {
-            if (makeit) {
-                res.status(200)
-            } else {
-                res.status(400)
-            }
-        }
-    )
-    res.send()
 })
 
 app.get('/buscador/:like', (req, res) => {
