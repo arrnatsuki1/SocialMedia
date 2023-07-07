@@ -2,10 +2,10 @@ const Conexion = require("./Conexion");
 const DAO = require("./DAO");
 
 class ImagenDAO extends DAO{
-    collectionName = "profile_picture";
 
     constructor(){
-        super()
+        super();
+        this.collectionName = "profile_picture";
     }
     
     async obtenerImagenDePerfil(uuid) {

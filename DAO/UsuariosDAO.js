@@ -1,7 +1,11 @@
-class UsuariosDAO {
-    dbName = "Feisbuk"
-    collectionName = "Usuarios"
-    constructor(){}
+const DAO = require("./DAO")
+
+class UsuariosDAO extends DAO {
+    
+    constructor(){
+        super();
+        this.collectionName = "Usuarios";
+    }
 
     async obtenerTodos(cliente){
         const db = cliente.db(this.dbName)

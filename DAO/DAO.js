@@ -1,5 +1,5 @@
 class DAO {
-    dbName = 'Feisbuk'
+    dbName = process.env.dbName || 'SocialMedia'
     collectionName = null
     constructor(){}
 }
