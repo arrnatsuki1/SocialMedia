@@ -15,12 +15,12 @@ const multerStorage = multer({
         filename: (req, file, cb) => {
             const fileType = path.extname(file.originalname);
             let name = file.originalname.split(fileType)[0];
-            name = `${name}-${req.cookies.uuid}-${fileType}`;
+            name = `${req.cookies.uuid}-${Date.now()}-${fileType}`;
             cb(null, name)
         }
     }),
     limits: {
-        fileSize: 1 * 1024 * 1024 * 5
+        fileSize: 1 * 1024 * 1024 * 5 //5MBts Maximo
     }
 })
 
@@ -147,7 +147,8 @@ app.get('/profile', (req, res) => {
                     })
                 }
             ).catch((err) => {
-                res.render(`
+                console.log(err)
+                res.send(`
                 <script>
                     alert("hubo un error al buscar tu perfil")
                     window.location = '/'

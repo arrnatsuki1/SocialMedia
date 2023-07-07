@@ -1,4 +1,5 @@
 const DAO = require('./DAO')
+const Conexion = require('./Conexion')
 
 class PublicacionesDAO extends DAO {
     constructor(){
@@ -9,8 +10,9 @@ class PublicacionesDAO extends DAO {
      * Obtiene todas las publicaciones de un usuario por su nombre
      * COF COF los nombres no pueden repetirse
      */
-    async obtenerTodasPorUsuario(cliente, usuario){
-        const db = cliente.db(this.dbName)
+    async obtenerTodasPorUsuario(usuario){
+        const conexion = await Conexion.obtenerConexion()
+        const db = conexion.db(this.dbName)
         const collection = db.collection(this.collectionName)
 
         const cursor = await collection.find(
@@ -19,8 +21,9 @@ class PublicacionesDAO extends DAO {
         return cursor
     }
 
-    async obtenerTodasPorUuid(cliente, uuid){
-        const db = cliente.db(this.dbName)
+    async obtenerTodasPorUuid(uuid){
+        const conexion = await Conexion.obtenerConexion()
+        const db = conexion.db(this.dbName)
         const collection = db.collection(this.collectionName)
         const cursor = await collection.find(
             {"creator.id": {$eq: uuid}}
@@ -28,27 +31,22 @@ class PublicacionesDAO extends DAO {
         return cursor
     }
 
-    async crearNuevaPublicacion(cliente, publicacion) {
-        const db = cliente.db(this.dbName)
+    async crearNuevaPublicacion(publicacion) {
+        const conexion = await Conexion.obtenerConexion()
+        const db = conexion.db(this.dbName)
         const collection = db.collection(this.collectionName)
         await collection.insertOne(publicacion)
         return true
     }
 
-    async obtenerPublicacion(cliente, objID) {
+    async obtenerPublicacion(objID) {
         throw new Error("Not implemented yet")
     }
     
-    /**
-     * Metodo para obtener las diez publicaciones mas recientes de un usuario
-     * @param {Connection} cliente 
-     * @param {String} uuid 
-     * @returns {Array}
-     */
-    async obtenerDiezResientes(cliente, uuid) {
-        const db = cliente.db(this.dbName)
+    async obtenerDiezResientes(uuid) {
+        const conexion = await Conexion.obtenerConexion()
+        const db = conexion.db(this.dbName)
         const collection = db.collection(this.collectionName)
-
         const publicationes = await collection.find({
             "creator.id": {$eq: uuid}
         }).limit(10).sort({date: -1})
