@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="/public/js/buscador.js"></script>
+    <link rel="stylesheet" href="/public/normalize.css">
     <link rel="stylesheet" href="/public/header.css">
 </head>
 <body>
@@ -12,6 +13,7 @@
     <% if(people.length == 0) {%>
         <script>
             alert("No se encontro ninguna coincidencia")
+            window.location = '/'
         </script>
     <%}%>
     <% people.forEach((person) => { %>

@@ -1,17 +1,32 @@
 <div class="header-profile">
     <div class="container-profileImage">
-        <img src="/public/upload/userpicture/default.jpeg" alt="" class="profileImage">
+        <% if(profileinfo.picture == null || profileinfo.picture == undefined) {%>
+            <img src="/public/upload/userpicture/default.jpeg" alt="" class="profileImage">
+        <%} else { %>
+            <img src=<%= profileinfo.picture %> alt="" class="profileImage">
+        <% } %>
     </div>
     <div class="header-profile-information">
         <p id="header-profile-information-name" class="texto-important1"><%= profileinfo.name %></p>
         <p id="header-profile-information-username" class="texto-important2">@<%= profileinfo.username %></p>
     </div>
+    <% if(propio == false) {%>
     <div class="header-profile-buttons">
-        <button class="header-profile-buttons-button">
+        <button class="header-profile-buttons-button button">
             Seguir
         </button>
-        <button class="header-profile-buttons-button">
+        <button class="header-profile-buttons-button button">
             Solicitud
         </button>
     </div>
+    <% } else { %>
+    <form class="header-profileselector" method="POST" id="form-profileimage">
+        <label for="file"> Imagen de perfil </label>
+        <input type="file" class="profile-image-upload" id="file" name="file">
+        <button class="header-profileselector-button button" id="profile-image-button" type="button">
+            Subir imagen de perfil
+        </button>
+    </form>
+    </>
+    <% } %>
 </div>

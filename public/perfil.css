@@ -42,15 +42,29 @@ p {
     align-items: center;
 }
 
-.header-profile-buttons-button {
+.button {
     margin: 0px 10px 0px 10px;
     padding: 10px 30px 10px 30px;
     border: none;
     border-radius: 40px;
 }
 
-.header-profile-buttons-button:hover {
+.button:hover {
     cursor: pointer;
+}
+
+.header-profileselector-button:hover {
+    background-color: red;
+}
+
+.header-profile-buttons-button:hover {
     background-color: green;
     color: white;
+}
+
+.header-profileselector {
+    margin-left: 2.5em;
+    display: grid;
+    justify-content: center;
+    background-color: bisque;
 }

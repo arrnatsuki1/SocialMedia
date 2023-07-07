@@ -5,6 +5,10 @@ const Usuario = require('../Dominio/User')
 const UsuarioExistenteError = require('../Dominio/excepciones/UsuarioExistenteError')
 const UsuarioInexistenteException = require('../Dominio/excepciones/UsuarioInexistenteException')
 const Publicacion = require('../Dominio/Publicacion')
+const ImagenDAO = require('../DAO/ImagenDAO')
+const Imagen = require('../Dominio/Imagen')
+const fs = require('fs')
+const path = require('path')
 
 class Logica {
 
@@ -103,6 +107,9 @@ class Logica {
         if (user == null || user == undefined) {
             throw new UsuarioInexistenteException("El usuario no existe")
         }
+
+        const imagendao = new ImagenDAO()
+        user.picture = await imagendao.obtenerImagenDePerfil(user.id)
         const pubs = await this.obtenerTodasLasPublicacionesPorUuid(user.id)
         return {
             pubs: pubs,
@@ -134,21 +141,26 @@ class Logica {
     async obtenerPorUuid(uuid) {
         const conexion = new Connection("mongodb", 27017)
         let encontrado = null;
+
+        await conexion.tryConnect()
+
+        async function buscarFotoDePerfil(usuario) {
+            const imagendao = new ImagenDAO()
+            return await imagendao.obtenerImagenDePerfil(usuario.id)
+        }
+
         async function buscarMiddleware() {
             const dao = new UsuariosDAO()
-            await dao.obtenerPorId(
-                conexion.client, uuid
-            ).then((usuario) => {
-                encontrado = usuario
-            })
-            conexion.logout()
+            return await dao.obtenerPorId(conexion.client, uuid)
         }
-        await conexion.tryConnect()
-            .then(
-                buscarMiddleware
-            ).catch((err) => {
-                throw new Error("AY UN ERROR")
-            })
+
+        encontrado = await buscarMiddleware()
+
+        if(encontrado != null) {
+            encontrado.picture = await buscarFotoDePerfil(encontrado)
+        }
+
+        conexion.logout()
         return encontrado
     }
 
@@ -241,6 +253,23 @@ class Logica {
             }
         )
         return usuarios
+    }
+
+    async guardarImagenDePerfil(filename, uuid) {
+        filename = '/public/upload/userpicture/'+filename;
+        const imagendao = new ImagenDAO()
+        //Buscar si tiene una imagen de perfil existente
+        const tiene = await imagendao.obtenerImagenDePerfil(uuid)
+        if(tiene == null) {
+            //Sino crear un nuevo campo
+            const imagen = new Imagen(uuid, filename)
+            await imagendao.guardarImagenDePerfil(imagen.toJSON())
+        } else {
+            const ruta = tiene
+            fs.unlinkSync(path.join(__dirname, "..", ruta))
+            //Si la tiene, actualizarla
+            await imagendao.cambiarImagenDePerfil(filename, uuid)
+        }
     }
 
 }

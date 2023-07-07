@@ -1,22 +1,37 @@
 const express = require('express');
+const multer = require('multer')
 const app = express()
 const path = require('path')
 const cookie_parser = require('cookie-parser')
+require('dotenv').config()
 
 /**
  * My stuff
  */
-const Connection = require('./DAO/Connection')
-const Userdao = require('./DAO/UsuariosDAO')
-const Usuario = require('./Dominio/User')
 const Logica = require('./Logica_De_Negocio/Logica');
+const multerStorage = multer({
+    storage: multer.diskStorage({
+        destination: path.join(__dirname, "/public/upload/userpicture"),
+        filename: (req, file, cb) => {
+            const fileType = path.extname(file.originalname);
+            let name = file.originalname.split(fileType)[0];
+            name = `${name}-${req.cookies.uuid}-${fileType}`;
+            cb(null, name)
+        }
+    }),
+    limits: {
+        fileSize: 1 * 1024 * 1024 * 5
+    }
+})
+
 
 /**
  * App configuration
  */
-app.use(express.urlencoded({ extended: false }))
-app.use(cookie_parser())
+
 app.set('view engine', 'ejs')
+app.use(express.urlencoded({ extended: true }))
+app.use(cookie_parser())
 app.use(express.json())
 app.use('/public', express.static(path.join(__dirname, '/public')))
 app.use('/views', express.static(path.join(__dirname, '/views')))
@@ -30,15 +45,14 @@ app.use('/views', express.static(path.join(__dirname, '/views')))
  * y no en el cliente
  */
 
-app.get('/', (req, res) => {
-    if (req.cookies.uuid == undefined || req.cookies.uuid.length < 0) {
-        res.render(
-            'index',
-        {loged: false});
-    } else {
-        res.render('./loged_pages/index', {loged: true})
-    }
-})
+const HomeController = require('./Controllers/HomeController')
+const SigupController = require('./Controllers/SignupController');
+
+//Homepage
+app.use('/', HomeController)
+app.use('/sign-up', SigupController)
+
+//
 
 app.get('/logout', (req, res) => {
     if (req.cookies.uuid == undefined || req.cookies.uuid.length == 0) {
@@ -65,17 +79,26 @@ app.get('/logout', (req, res) => {
 app.get('/user/:userName', (req, res) => {
     const username = req.params.userName
     const logica = new Logica()
-    let isLoged = req.cookies.uuid != undefined;
+    let isLogged = req.cookies.uuid != undefined;
     logica.obtenerPerfilCompleto(username)
         .then(
             (info) => {
-                res.render("Profile",
-                    {
-                        publications: info.pubs,
-                        loged: isLoged,
-                        userinfo: info.user
-                    }
-                )
+                if (info.user.id === req.cookies.uuid) {
+                    res.send(`
+                        <script>
+                            window.location = '/profile'
+                        </script>
+                    `)
+                } else {
+                    res.render("Profile",
+                        {
+                            publications: info.pubs,
+                            loged: isLogged,
+                            userinfo: info.user,
+                            propio: false
+                        }
+                    )
+                }
             }
         ).catch((err) => {
             res.send(`
@@ -90,44 +113,6 @@ app.get('/user/:userName', (req, res) => {
 app.get('/login', checkForUuid, (req, res) => {
     res.render('LogIn')
 })
-
-app.get('/sign-up', checkForUuid, (req, res) => {
-    res.render('sign-up')
-})
-/**
- * LA CANIJA DE MI HERMANANA ME DIJO QUE SI ESTO SE COMPLETA A LA PERFECCION
- * LA SESION TIENE QUE QUEDAR INICIADA Y TE TIENE QUE MANDAR A LA PAGINA DE INICIO
- */
-app.post('/sign-up', (req, res) => {
-    const logica = new Logica()
-    logica.agregarUsuario(req).then(
-        (result) => {
-            if (result == null) {
-                res.send("Error al intentar regitrar el usuario")
-                return;
-            }
-            res.cookie('uuid', result)
-            res.send(`
-                <script>
-                    alert('se registro con exito')
-                    window.location = '/'
-                </script>
-            `)
-        }
-    ).catch((err) => {
-        if (err.name == "UsuarioExistenteError") {
-            res.send("El usuario que desea agregar ya existe")
-        } else {
-            res.send(`
-            <script>
-                alert("Hubo un error con los servidores, por favor intentelo mas tarde")
-                window.location = '/sign-up'
-            </script>
-            `)
-        }
-    })
-})
-
 
 function checkForUuid(req, res, next) {
     if (req.cookies.uuid == null || typeof req.cookies.uuid == undefined) {
@@ -150,22 +135,29 @@ app.get('/profile', (req, res) => {
     log.obtenerPorUuid(req.cookies.uuid).then(
         (userinfo) => {
             user = userinfo
+            log.obtenerTodasLasPublicacionesPorUuid(req.cookies.uuid).then(
+                (pubs) => {
+                    res.render('Profile', {
+                        publications: pubs,
+                        loged: true,
+                        userinfo: user,
+                        propio: true
+                    })
+                }
+            ).catch((err) => {
+                res.render(`
+                <script>
+                    alert("hubo un error al buscar tu perfil")
+                    window.location = '/'
+                </script>`)
+            })
         }
     )
-    log.obtenerTodasLasPublicacionesPorUuid(req.cookies.uuid).then(
-        (pubs) => {
-            res.render('Profile', { publications: pubs, loged: true, userinfo: user })
-        }
-    ).catch((err) => {
-        res.render('./loged_pages/index')
-    })
+
 })
 
 app.post('/login', (req, res) => {
     const logica = new Logica()
-
-
-
     logica.inicioDeSesion(req)
         .then((value) => {
             if (value == null) {
@@ -219,14 +211,30 @@ app.post('/createmessage', (req, res) => {
 app.get('/buscador/:like', (req, res) => {
     const like = req.params.like
     const logica = new Logica()
-    logica.buscarUsuariosConUsuarioSimilar(like).then((value)=>{
+    logica.buscarUsuariosConUsuarioSimilar(like).then((value) => {
         res.render(
-            'people', {people: value, loged: req.cookies.uuid!=undefined ? true : false}
+            'people', { people: value, loged: req.cookies.uuid != undefined ? true : false }
         )
     })
 })
 
-const port = 8080
+/**
+ * Necesito hacer un controlador para esto
+ */
+app.post('/profile', multerStorage.single('file'), (req, res) => {
+    if(req.file == undefined) {
+        res.status(400).send()
+    } else {
+        const log = new Logica()
+        log.guardarImagenDePerfil(req.file.filename, req.cookies.uuid).then(
+            () => {
+                res.status(200).send(`<script>window.location = '/profile'</script>`)
+            }
+        )
+    }
+})
+
+const port = process.env.PORT || 80
 app.listen(port, () => {
     console.log(`listening at port ${port}`)
 })
