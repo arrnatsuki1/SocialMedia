@@ -80,6 +80,13 @@ class UsuariosDAO extends DAO {
         return encontrados
     }
 
+    async esMiAmigo(uuid) {
+        const conexion = await Conexion.obtenerConexion()
+        const db = conexion.db(this.dbName)
+        const collection = db.collection(this.collectionName)
+        const cursor = collection.find({username: {$eq: username}})
+    }
+
 }
 
 module.exports = UsuariosDAO

@@ -12,7 +12,7 @@ function mensajeBienHecho() {
 }
 
 async function crearMensaje() {
-    const response = await fetch('/message/createmessage',
+    await fetch('/message/createmessage',
         {
             method: "POST",
             headers: {
@@ -22,9 +22,8 @@ async function crearMensaje() {
                 message: document.getElementById('main-textfield').value
             })
         }
-    ).then(()=>{
-        document.getElementById('main-textfield').value = ""
-    })
+    )
+    document.getElementById('main-textfield').value = ""
 }
 
 window.addEventListener('load', () => {

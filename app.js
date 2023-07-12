@@ -3,6 +3,12 @@ const multer = require('multer')
 const app = express()
 const path = require('path')
 const cookie_parser = require('cookie-parser')
+
+/*
+ * ELO WORLLDD
+ * im rosita from neovimmmm
+ * */
+
 require('dotenv').config()
 
 /**
@@ -48,11 +54,12 @@ app.use('/views', express.static(path.join(__dirname, '/views')))
 const HomeController = require('./Controllers/HomeController')
 const SigupController = require('./Controllers/SignupController');
 const MessageController = require('./Controllers/MessageController')
-
+const UserController = require('./Controllers/UserController')
 //Homepage
 app.use('/', HomeController)
 app.use('/sign-up', SigupController)
 app.use('/message', MessageController)
+app.use('/userinfo', UserController)
 
 //
 

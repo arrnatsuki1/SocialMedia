@@ -14,13 +14,18 @@ window.addEventListener('load', () => {
 
 const render = function (pubs) {
 
+    const messages = document.createElement('div')
+    messages.setAttribute('class', 'messages')
     for (let i = 0; i < pubs.length; i++) {
-
+        console.log("a")
         function createPubDiv(pub) {
 
             const pubinfotext = `${pub.creator.name} in ${pub.date}`
             const pubbodytext = pub.message
-
+            /**
+             * Para esto queda mejor hacer un objeto que sea una etiqueta mensaje
+             * 
+             */
             let publication = document.createElement('div')
             publication.setAttribute('class', 'publication')
             let pubinfo = document.createElement('a')
@@ -36,13 +41,15 @@ const render = function (pubs) {
             pubinfo.appendChild(
                 document.createTextNode(pubinfotext)
             )
-            return publication
+            messages.appendChild(publication)
+            return messages
         }
 
         pubs[i].forEach(element => {
-            const pub = createPubDiv(element)
-            document.body.appendChild(pub)
+            messages.appendChild(createPubDiv(element))
         });
+
+        document.appendChild(messages )
 
 
     }

@@ -1,5 +1,17 @@
+.textfield-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container-options {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .container {
-    display: grid;
+    display: flex;
 }
 
 .boton {

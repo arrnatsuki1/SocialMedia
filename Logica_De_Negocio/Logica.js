@@ -140,6 +140,20 @@ class Logica {
         }
     }
 
+    async esMiAmigo(username, uuid) {
+        const daousuarios = new UsuariosDAO()
+        const usuario = await daousuarios.obtenerPorUserName(username)
+        const esMiAmigo = usuario.friendList.indexOf(uuid) >= 0 ? true : false;
+        return esMiAmigo
+    }
+
+    async loSigo(myuuid, theiruuid) {
+        const daousuarios = new UsuariosDAO()
+        const usuario = await daousuarios.obtenerPorUserName(myuuid)
+        const loSigo = usuario.friendList.indexOf(theiruuid) >= 0 ? true : false;
+        return loSigo
+    }
+
 }
 
 module.exports = Logica
