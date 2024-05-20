@@ -85,39 +85,33 @@ app.get('/logout', (req, res) => {
 /**
  * De preferencia cambiar el metodo a POST
  */
-app.get('/user/:userName', (req, res) => {
+app.get('/user/:userName', async (req, res) => {
     const username = req.params.userName
     const logica = new Logica()
     let isLogged = req.cookies.uuid != undefined;
-    logica.obtenerPerfilCompleto(username)
-        .then(
-            (info) => {
-                if (info.user.id === req.cookies.uuid) {
-                    res.send(`
-                        <script>
-                            window.location = '/profile'
-                        </script>
-                    `)
-                } else {
-                    res.render("Profile",
-                        {
-                            publications: info.pubs,
-                            loged: isLogged,
-                            userinfo: info.user,
-                            propio: false
-                        }
-                    )
-                }
-            }
-        ).catch((err) => {
-            res.send(`
+
+    const info = await logica.obtenerPerfilCompleto(username);
+
+    if (info.user.id === req.cookies.uuid) {
+        res.send(
+            `
                 <script>
-                    alert("Hubo un error en la busqueda")
-                    window.location = '/'
+                    window.location = '/profile'
                 </script>
-            `)
-        })
-})
+            `
+        )
+    } else {
+        res.render("Profile",
+            {
+                publications: info.pubs,
+                loged: isLogged,
+                userinfo: info.user,
+                propio: false
+            }
+        )
+    }
+    
+});
 
 app.get('/login', checkForUuid, (req, res) => {
     res.render('LogIn')
@@ -218,7 +212,7 @@ app.get('/buscador/:like', (req, res) => {
  * Necesito hacer un controlador para esto
  */
 app.post('/profile', multerStorage.single('file'), (req, res) => {
-    if(req.file == undefined) {
+    if (req.file == undefined) {
         res.status(400).send()
     } else {
         const log = new Logica()
